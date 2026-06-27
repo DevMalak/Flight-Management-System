@@ -540,17 +540,17 @@ namespace Flight_Management_System
                 Console.WriteLine("\n=============================================");
                 Console.WriteLine("Flight Management System");
                 Console.WriteLine("===============================================");
-                Console.WriteLine("1  - Register a Passenger");
-                Console.WriteLine("2  - Add an Aircraft");
-                Console.WriteLine("3  - Register a Pilot");
-                Console.WriteLine("4  - View All Flights");
-                Console.WriteLine("5  - Schedule a Flight");
-                Console.WriteLine("6  - Book a Fligh");
-                Console.WriteLine("7  - Cancel a Booking");
-                Console.WriteLine("8  - Depart a Flight");
-                Console.WriteLine("9  - Cancel a Flight");
-                Console.WriteLine("10  - Passenger Booking History");
-                Console.WriteLine("11  - Flight Revenue & Load Factor Report");
+                Console.WriteLine("1  - Register a Passenger");  // Add, List(Passengers)
+                Console.WriteLine("2  - Add an Aircraft");       // Add, List(Aircrafts)
+                Console.WriteLine("3  - Register a Pilot");      // Add, List(Pilots)
+                Console.WriteLine("4  - View All Flights");      // Read, List(Flights)
+                Console.WriteLine("5  - Schedule a Flight");     // Add, internal reads and updates
+                Console.WriteLine("6  - Book a Fligh");          // Add, internal reads and updates
+                Console.WriteLine("7  - Cancel a Booking");      // Update, internal reads and updates
+                Console.WriteLine("8  - Depart a Flight");       // Update, internal reads and updates
+                Console.WriteLine("9  - Cancel a Flight");        // Update, internal reads and updates
+                Console.WriteLine("10  - Passenger Booking History"); // Read, internal reads
+                Console.WriteLine("11  - Flight Revenue & Load Factor Report"); // Read, internal calculations
                 Console.WriteLine("0  - Exit");
                 Console.WriteLine("===============================================");
                 Console.WriteLine("Select option:");
