@@ -27,7 +27,7 @@ namespace Flight_Management_System
 
         //there are 5 empty lists exits in memory under context
 
-        public static void RegisterPassenger() //01
+        public static void RegisterPassenger() //01  - Add
         {
 
             Console.WriteLine("\n===Register New Passenger===");
@@ -79,7 +79,7 @@ namespace Flight_Management_System
 
 
 
-        public static void AddAircraft()  //02
+        public static void AddAircraft()  //02  - Add
         {
 
             Console.WriteLine("\n=== Register New Aircraft ===");
@@ -115,7 +115,7 @@ namespace Flight_Management_System
         }
 
 
-        public static void RegisterPilot() //03
+        public static void RegisterPilot() //03 - Add
         {
 
 
@@ -162,7 +162,7 @@ namespace Flight_Management_System
 
 
 
-        public static void ViewAllFlights() //04
+        public static void ViewAllFlights() //04  - Read
         {
 
             Console.WriteLine("\n=== All Registered Flights ===");
@@ -179,7 +179,7 @@ namespace Flight_Management_System
         }
 
 
-        public static void ScheduleFlight() //05
+        public static void ScheduleFlight() //05  - Add, internal reads and updates
         {
             Console.WriteLine("\n=== Schedule Flight ===");
 
@@ -272,8 +272,7 @@ namespace Flight_Management_System
         }
 
 
-
-        public static void BookFlight() //06
+        public static void BookFlight() //06   - Add, internal reads and updates
         {
 
             Console.WriteLine("\n=== Book a Flight ===");
@@ -281,14 +280,12 @@ namespace Flight_Management_System
             Console.Write("Enter Passenger ID: ");
             int passengerId = int.Parse(Console.ReadLine());
 
-
-            //passenger validation
-
+            // passenger validation
             bool result = context.Passengers.Any(p => p.passengerId == passengerId);
 
-            if(result == false)
+            if (result == false)
             {
-                Console.WriteLine(" Passenger not found enter another ID");
+                Console.WriteLine("Passenger not found enter another ID");
                 return;
             }
 
@@ -300,6 +297,12 @@ namespace Flight_Management_System
                          && f.status == "Scheduled"
                          && f.availableSeats > 0)
                 .ToList();
+
+            if (availableFlights.Count == 0)
+            {
+                Console.WriteLine("No available flights for this destination");
+                return;
+            }
 
             Console.WriteLine("\nAvailable Flights:");
 
@@ -315,23 +318,24 @@ namespace Flight_Management_System
 
             Flight selectedFlight = availableFlights.FirstOrDefault(f => f.flightId == flightId);
 
+           
+            if (selectedFlight == null)
+            {
+                Console.WriteLine("Invalid Flight ID");
+                return;
+            }
+
             int bookingId = context.Bookings.Count + 1;
 
             context.Bookings.Add(new Booking
             {
-                bookingId = bookingId, // system generated
-
-                passengerId = passengerId, // user input
-
-                flightId = flightId, // user input from flight list
-
-                seatNumber = "S-" + bookingId, // system generated
-
-                bookingDate = DateTime.Now.ToString("yyyy-MM-dd"), // system generated
-
-                totalPrice = selectedFlight.ticketPrice, // system calculated 
-
-                status = "Confirmed" // default value
+                bookingId = bookingId,
+                passengerId = passengerId,
+                flightId = flightId,
+                seatNumber = "S-" + bookingId,
+                bookingDate = DateTime.Now.ToString("yyyy-MM-dd"),
+                totalPrice = selectedFlight.ticketPrice,
+                status = "Confirmed"
             });
 
             selectedFlight.availableSeats--;
@@ -341,8 +345,10 @@ namespace Flight_Management_System
         }
 
 
-        public static void CancelBooking() //07
+        public static void CancelBooking() //07  - Update, internal reads and updates
         {
+
+
             Console.WriteLine("\n=== Cancel Booking ===");
 
             Console.Write("Enter booking ID to cancel: ");
@@ -350,17 +356,39 @@ namespace Flight_Management_System
 
             Booking booking = context.Bookings.FirstOrDefault(b => b.bookingId == bookingId);
 
+            // validation
+            if (booking == null)
+            {
+                Console.WriteLine("Booking not found");
+                return;
+            }
+
+            //  validation
+            if (booking.status == "Cancelled")
+            {
+                Console.WriteLine("Booking already cancelled");
+                return;
+            }
+
             Flight flight = context.Flights.FirstOrDefault(f => f.flightId == booking.flightId);
+
+            // validation
+            if (flight == null)
+            {
+                Console.WriteLine("Flight not found");
+                return;
+            }
 
             flight.availableSeats++;
 
             booking.status = "Cancelled";
 
             Console.WriteLine($"Booking {bookingId} has been cancelled and the seat is available again.");
-
         }
 
-        public static void DepartFlight() //08
+
+        public static void DepartFlight() //08   - Update, internal reads and updates
+
         {
 
             Console.WriteLine("\n=== Depart Flight ===");
@@ -393,7 +421,8 @@ namespace Flight_Management_System
 
         }
 
-        public static void CancelFlight() //09
+        public static void CancelFlight() //09  - Update, internal reads and updates
+
         {
             Console.WriteLine("\n=== Cancel a Flight ===");
 
@@ -442,7 +471,8 @@ namespace Flight_Management_System
 
 
 
-        public static void PassengerBookingHistory() //10
+        public static void PassengerBookingHistory() //10  - Read, internal reads
+
         {
             Console.WriteLine("\n=== Passenger Booking History ===");
 
@@ -490,11 +520,13 @@ namespace Flight_Management_System
 
         }
 
-        public static void FlightRevenueAndLoadFactorReport() //11
+        public static void FlightRevenueAndLoadFactorReport() //11  - Read, internal calculations
         {
 
 
             Console.WriteLine("\n=== Flight Revenue & Load Factor Report ===");
+
+            decimal grandTotalRevenue = 0;
 
             foreach (Flight f in context.Flights)
             {
@@ -509,6 +541,8 @@ namespace Flight_Management_System
                 {
                     revenue = revenue + b.totalPrice;
                 }
+
+                grandTotalRevenue = grandTotalRevenue + revenue;
 
                 int totalSeats = f.availableSeats + bookedSeats;
 
@@ -525,7 +559,7 @@ namespace Flight_Management_System
                 Console.WriteLine("Load Factor: " + loadFactor + "%");
             }
 
-
+            Console.WriteLine("\nGrand Total Revenue: " + grandTotalRevenue);
         }
 
 
